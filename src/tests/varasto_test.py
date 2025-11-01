@@ -61,4 +61,4 @@ class TestVarasto(unittest.TestCase):
         self.varasto = Varasto(0, 1)
 
     def test_olematon_saldo(self):
-        self.varasto = Varasto(0, -1)
+        self.varasto = Varasto(0, -2)
