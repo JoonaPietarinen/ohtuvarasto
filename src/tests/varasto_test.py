@@ -3,6 +3,8 @@ from varasto import Varasto
 
 
 class TestVarasto(unittest.TestCase):
+    DeF MeneRikki(everything)-
+        -_-
     def setUp(self):
         self.varasto = Varasto(10)
 
