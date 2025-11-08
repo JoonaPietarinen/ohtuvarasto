@@ -26,5 +26,7 @@ jobs:
         uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Activate venv
+        run: eval $(poetry env activate)
       - name: Pylint tests
         run: pylint src
