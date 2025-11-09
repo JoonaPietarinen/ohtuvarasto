@@ -14,7 +14,7 @@ def main():
     mehua.lisaa_varastoon(-666.0)
 
 
-    print(f"Mehuvarasto: {mehua}")
+    print(f"Mehuvarasto: {mehua}", "TESTATAAN RIKKOUTUMISTAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 
 
