@@ -47,7 +47,9 @@
             <td>{% if product.price %}{{ "%.2f"|format(product.price) }}{% else %}-{% endif %}</td>
             <td class="actions">
                 <a href="{{ url_for('products.edit_product', wh_id=warehouse.warehouse_id, prod_id=product.product_id) }}" class="btn btn-sm btn-secondary">Edit</a>
-                <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ product.product_id }}, '{{ product.name }}')">Delete</button>
+                <button type="button" class="btn btn-sm btn-danger delete-btn"
+                        data-name="{{ product.name }}"
+                        data-url="{{ url_for('products.delete_product', wh_id=warehouse.warehouse_id, prod_id=product.product_id) }}">Delete</button>
             </td>
         </tr>
         {% endfor %}
@@ -77,11 +79,15 @@
 
 {% block scripts %}
 <script>
-function confirmDelete(productId, productName) {
-    document.getElementById('productName').textContent = productName;
-    document.getElementById('deleteForm').action = '/warehouses/{{ warehouse.warehouse_id }}/products/' + productId + '/delete';
-    document.getElementById('deleteModal').style.display = 'block';
-}
+document.querySelectorAll('.delete-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var name = this.getAttribute('data-name');
+        var url = this.getAttribute('data-url');
+        document.getElementById('productName').textContent = name;
+        document.getElementById('deleteForm').action = url;
+        document.getElementById('deleteModal').style.display = 'block';
+    });
+});
 
 function closeModal() {
     document.getElementById('deleteModal').style.display = 'none';

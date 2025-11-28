@@ -26,7 +26,10 @@
             <td>{{ warehouse.products | length }}</td>
             <td class="actions">
                 <a href="{{ url_for('warehouses.edit_warehouse', warehouse_id=warehouse.warehouse_id) }}" class="btn btn-sm btn-secondary">Edit</a>
-                <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ warehouse.warehouse_id }}, '{{ warehouse.name }}')">Delete</button>
+                <button type="button" class="btn btn-sm btn-danger delete-btn" 
+                        data-id="{{ warehouse.warehouse_id }}" 
+                        data-name="{{ warehouse.name }}"
+                        data-url="{{ url_for('warehouses.delete_warehouse', warehouse_id=warehouse.warehouse_id) }}">Delete</button>
             </td>
         </tr>
         {% endfor %}
@@ -57,11 +60,15 @@
 
 {% block scripts %}
 <script>
-function confirmDelete(warehouseId, warehouseName) {
-    document.getElementById('warehouseName').textContent = warehouseName;
-    document.getElementById('deleteForm').action = '/warehouses/' + warehouseId + '/delete';
-    document.getElementById('deleteModal').style.display = 'block';
-}
+document.querySelectorAll('.delete-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var name = this.getAttribute('data-name');
+        var url = this.getAttribute('data-url');
+        document.getElementById('warehouseName').textContent = name;
+        document.getElementById('deleteForm').action = url;
+        document.getElementById('deleteModal').style.display = 'block';
+    });
+});
 
 function closeModal() {
     document.getElementById('deleteModal').style.display = 'none';
