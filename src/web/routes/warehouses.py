@@ -92,10 +92,7 @@ def _handle_edit_warehouse_post(warehouse):
         )
     storage.update_warehouse(warehouse.warehouse_id, name, description)
     flash('Warehouse updated successfully.', 'success')
-    return redirect(url_for(
-        'warehouses.show_warehouse',
-        warehouse_id=warehouse.warehouse_id
-    ))
+    return redirect(url_for('warehouses.index'))
 
 
 @bp.route('/warehouses/<int:warehouse_id>/edit', methods=['GET', 'POST'])
