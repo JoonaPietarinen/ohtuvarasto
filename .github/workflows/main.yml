@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Run tests
-        run: poetry run coverage run --branch -m pytest --fail-under=8
+        run: poetry run coverage run --branch -m pytest
       - name: Coverage report
         run: poetry run coverage xml
       - name: Coverage report to Codecov
@@ -27,5 +27,5 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Pylint tests
-        run: poetry run pylint $(git ls-files '*.py')
+        run: poetry run pylint $(git ls-files '*.py') --fail-under=8
 
