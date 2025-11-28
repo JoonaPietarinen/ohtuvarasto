@@ -14,6 +14,8 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: '3.12'
+      - name: Poetry lock
+        run: poetry lock
       - name: Install Poetry
         run: pip install poetry
       - name: Install dependencies
