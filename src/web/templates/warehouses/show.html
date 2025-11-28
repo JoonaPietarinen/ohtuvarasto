@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}{{ warehouse.name }} - Ohtuvarasto{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{{ url_for('warehouses.index') }}">Warehouses</a> &raquo; {{ warehouse.name }}
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>{{ warehouse.name }}</h2>
+    <div>
+        <a href="{{ url_for('warehouses.edit_warehouse', warehouse_id=warehouse.warehouse_id) }}" class="btn btn-secondary">Edit Warehouse</a>
+    </div>
+</div>
+
+{% if warehouse.description %}
+<p>{{ warehouse.description }}</p>
+{% endif %}
+
+<hr>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
+    <h3 style="margin: 0;">Products</h3>
+    <a href="{{ url_for('products.new_product', warehouse_id=warehouse.warehouse_id) }}" class="btn btn-success">+ Add Product</a>
+</div>
+
+{% if products %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Capacity</th>
+            <th>Available Space</th>
+            <th>Price</th>
+            <th class="actions">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.capacity }}</td>
+            <td>{{ product.varasto.paljonko_mahtuu() }}</td>
+            <td>{% if product.price %}{{ "%.2f"|format(product.price) }}{% else %}-{% endif %}</td>
+            <td class="actions">
+                <a href="{{ url_for('products.edit_product', wh_id=warehouse.warehouse_id, prod_id=product.product_id) }}" class="btn btn-sm btn-secondary">Edit</a>
+                <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ product.product_id }}, '{{ product.name }}')">Delete</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+    <p>No products in this warehouse yet.</p>
+    <p><a href="{{ url_for('products.new_product', warehouse_id=warehouse.warehouse_id) }}">Add your first product</a></p>
+</div>
+{% endif %}
+
+<!-- Delete confirmation modal -->
+<div id="deleteModal" class="modal-overlay">
+    <div class="modal">
+        <h3>Confirm Delete</h3>
+        <p>Are you sure you want to delete product "<span id="productName"></span>"?</p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            <form id="deleteForm" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function confirmDelete(productId, productName) {
+    document.getElementById('productName').textContent = productName;
+    document.getElementById('deleteForm').action = '/warehouses/{{ warehouse.warehouse_id }}/products/' + productId + '/delete';
+    document.getElementById('deleteModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+</script>
+{% endblock %}

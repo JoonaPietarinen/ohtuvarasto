@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Warehouses - Ohtuvarasto{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Warehouses</h2>
+    <a href="{{ url_for('warehouses.new_warehouse') }}" class="btn btn-success">+ New Warehouse</a>
+</div>
+
+{% if warehouses %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Products</th>
+            <th class="actions">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for warehouse in warehouses %}
+        <tr>
+            <td><a href="{{ url_for('warehouses.show_warehouse', warehouse_id=warehouse.warehouse_id) }}">{{ warehouse.name }}</a></td>
+            <td>{{ warehouse.description or '-' }}</td>
+            <td>{{ warehouse.products | length }}</td>
+            <td class="actions">
+                <a href="{{ url_for('warehouses.edit_warehouse', warehouse_id=warehouse.warehouse_id) }}" class="btn btn-sm btn-secondary">Edit</a>
+                <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ warehouse.warehouse_id }}, '{{ warehouse.name }}')">Delete</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+    <p>No warehouses yet.</p>
+    <p><a href="{{ url_for('warehouses.new_warehouse') }}">Create your first warehouse</a></p>
+</div>
+{% endif %}
+
+<!-- Delete confirmation modal -->
+<div id="deleteModal" class="modal-overlay">
+    <div class="modal">
+        <h3>Confirm Delete</h3>
+        <p>Are you sure you want to delete warehouse "<span id="warehouseName"></span>"?</p>
+        <p>This will also delete all products in this warehouse.</p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            <form id="deleteForm" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function confirmDelete(warehouseId, warehouseName) {
+    document.getElementById('warehouseName').textContent = warehouseName;
+    document.getElementById('deleteForm').action = '/warehouses/' + warehouseId + '/delete';
+    document.getElementById('deleteModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+</script>
+{% endblock %}

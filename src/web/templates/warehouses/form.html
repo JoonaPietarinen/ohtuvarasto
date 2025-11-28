@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ action }} Warehouse - Ohtuvarasto{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{{ url_for('warehouses.index') }}">Warehouses</a> &raquo; {{ action }} Warehouse
+</div>
+
+<h2>{{ action }} Warehouse</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="name">Name *</label>
+        <input type="text" id="name" name="name" value="{{ name }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description">{{ description }}</textarea>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-success">{{ action }}</button>
+        {% if warehouse %}
+        <a href="{{ url_for('warehouses.show_warehouse', warehouse_id=warehouse.warehouse_id) }}" class="btn btn-secondary">Cancel</a>
+        {% else %}
+        <a href="{{ url_for('warehouses.index') }}" class="btn btn-secondary">Cancel</a>
+        {% endif %}
+    </div>
+</form>
+{% endblock %}
